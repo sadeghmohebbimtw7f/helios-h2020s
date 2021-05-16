@@ -1,0 +1,2 @@
+rootProject.name='mediastreaming-videocall'
+include ':app'

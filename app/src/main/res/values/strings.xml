@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">helios-mediastreaming Videocall</string>
+
+    <!-- Video Call Strings -->
+    <string name="end_call_button">Hangup</string>
+<!--    <string name="TURN_URL">turns:builder.helios-social.eu:5349</string>-->
+    <string name="TURN_URL">turn:builder.helios-social.eu:3478</string>
+    <string name="TURN_user">helios</string>
+    <string name="TURN_credential">h3l10s</string>
+<!--    <string name="STUN_URL">stun:builder.helios-social.eu:3478</string>-->
+    <string name="STUN_URL">stun:stun.l.google.com:19302</string>
+    <string name="API_endpoint">https://builder.helios-social.eu:1794</string>
+    <string name="room_name">test_room</string>
+
+</resources>
