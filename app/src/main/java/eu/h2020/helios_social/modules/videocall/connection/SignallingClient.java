@@ -1,3 +1,21 @@
+/*************************************************************************
+ *
+ * ATOS CONFIDENTIAL
+ * __________________
+ *
+ *  Copyright (2020) Atos Spain SA
+ *  All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Atos Spain SA and other companies of the Atos group.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Atos Spain SA
+ * and other companies of the Atos group and may be covered by Spanish regulations
+ * and are protected by copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Atos Spain SA.
+ */
 package eu.h2020.helios_social.modules.videocall.connection;
 
 import android.annotation.SuppressLint;
@@ -14,202 +32,250 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import okhttp3.OkHttpClient;
+
 
 public class SignallingClient {
     private static SignallingClient instance;
-    private String roomName = null;
     private Socket socket;
-    public boolean isChannelReady = false;
-    public boolean isInitiator = false;
-    public boolean isStarted = false;
     private SignalingInterface callback;
 
-    //This piece of code should not go into production!!
-    //This will help in cases where the node server is running in non-https server and you want to ignore the warnings
+    // This piece of code should not go into production!!
+    // This will help in cases where the node server is running in non-https
+    // server and you want to ignore the warnings
     @SuppressLint("TrustAllX509TrustManager")
-    private final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return new java.security.cert.X509Certificate[]{};
-        }
+    private final TrustManager[] trustAllCerts = new TrustManager[]{
+        new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return new java.security.cert.X509Certificate[]{};
+            }
 
-        public void checkClientTrusted(X509Certificate[] chain,
-                                       String authType) {
-        }
+            public void checkClientTrusted(X509Certificate[] chain,
+                                        String authType) {}
 
-        public void checkServerTrusted(X509Certificate[] chain,
-                                       String authType) {
+            public void checkServerTrusted(X509Certificate[] chain,
+                                        String authType) {}
         }
-    }};
+    };
 
     public static SignallingClient getInstance() {
         if (instance == null) {
             instance = new SignallingClient();
         }
-        if (instance.roomName == null) {
-            Log.d("SignallingClient.getInstance", "roomName is null");
-            instance.roomName = "test_room";
-        }
-        else
-        {
-            Log.d("SignallingClient.getInstance", "roomName is " + instance.roomName);
-        }
+
         return instance;
     }
 
+    public void init(SignalingInterface signalingInterface, String apiEndpoint,
+        String room_name
+    ) {
+        Log.d("SignallingClient.init", apiEndpoint + "/" + room_name);
 
-    public void init(SignalingInterface signalingInterface, String apiEndpoint, String room_name) {
-        roomName = room_name;
-        Log.d("SignallingClient.init",roomName);
-        Log.d("SignallingClient.init",apiEndpoint);
         this.callback = signalingInterface;
-        try {
-            SSLContext sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init(null, trustAllCerts, null);
-            IO.setDefaultHostnameVerifier((hostname, session) -> true);
-            IO.setDefaultSSLContext(sslcontext);
-            //set the socket.io url here
-            socket = IO.socket(apiEndpoint);
-            socket.connect();
-            Log.d("SignallingClient", "init() called");
 
-            if (!roomName.isEmpty()) {
-                emitInitStatement(roomName);
+        // Based on code from https://stackoverflow.com/a/57313375/586382
+        // HACK we should be accepting all certificates, provide a valid one in
+        //      the signaling server instead
+        HostnameVerifier myHostnameVerifier = new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
             }
+        };
+        TrustManager[] trustAllCerts= new TrustManager[] {
+            new X509TrustManager() {
+                public void checkClientTrusted(X509Certificate[] chain, String authType) {}
 
-            //room created event.
-            socket.on("created", args -> {
-                Log.d("SignallingClient", "created call() called with: args = [" + Arrays.toString(args) + "]");
-                isInitiator = true;
-                callback.onCreatedRoom();
-            });
+                public void checkServerTrusted(X509Certificate[] chain, String authType) {}
 
-            //room is full event
-            socket.on("full", args -> Log.d("SignallingClient", "full call() called with: args = [" + Arrays.toString(args) + "]"));
-
-            //peer joined event
-            socket.on("join", args -> {
-                Log.d("SignallingClient", "join call() called with: args = [" + Arrays.toString(args) + "]");
-                isChannelReady = true;
-                callback.onNewPeerJoined();
-            });
-
-            //when you joined a chat room successfully
-            socket.on("joined", args -> {
-                Log.d("SignallingClient", "joined call() called with: args = [" + Arrays.toString(args) + "]");
-                isChannelReady = true;
-                callback.onJoinedRoom();
-            });
-
-            //log event
-            socket.on("log", args -> Log.d("SignallingClient", "log call() called with: args = [" + Arrays.toString(args) + "]"));
-
-            //bye event
-            socket.on("bye", args -> callback.onRemoteHangUp((String) args[0]));
-
-            //messages - SDP and ICE candidates are transferred through this
-            socket.on("message", args -> {
-                Log.d("SignallingClient", "message call() called with: args = [" + Arrays.toString(args) + "]");
-                if (args[0] instanceof String) {
-                    Log.d("SignallingClient", "String received :: " + args[0]);
-                    String data = (String) args[0];
-                    if (data.equalsIgnoreCase("got user media")) {
-                        callback.onTryToStart();
-                    }
-                    if (data.equalsIgnoreCase("bye")) {
-                        callback.onRemoteHangUp(data);
-                    }
-                } else if (args[0] instanceof JSONObject) {
-                    try {
-
-                        JSONObject data = (JSONObject) args[0];
-                        Log.d("SignallingClient", "Json Received :: " + data.toString());
-                        String type = data.getString("type");
-                        if (type.equalsIgnoreCase("offer")) {
-                            callback.onOfferReceived(data);
-                        } else if (type.equalsIgnoreCase("answer") && isStarted) {
-                            callback.onAnswerReceived(data);
-                        } else if (type.equalsIgnoreCase("candidate") && isStarted) {
-                            callback.onIceCandidateReceived(data);
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
                 }
-            });
-        } catch (URISyntaxException | NoSuchAlgorithmException | KeyManagementException e) {
+            }
+        };
+
+        SSLContext mySSLContext = null;
+        try {
+            mySSLContext = SSLContext.getInstance("TLS");
+            mySSLContext.init(null, trustAllCerts, null);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
             e.printStackTrace();
         }
-    }
 
-    private void emitInitStatement(String message) {
-        Log.d("SignallingClient", "emitInitStatement() called with: event = [" + "create or join" + "], message = [" + message + "]");
-        socket.emit("create or join", message);
-    }
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .hostnameVerifier(myHostnameVerifier)
+            .sslSocketFactory(mySSLContext.getSocketFactory())
+        .build();
 
-    public void emitMessage(String message) {
-        Log.d("SignallingClient", "emitMessage() called with: message = [" + message + "]");
-        socket.emit("message", message);
-    }
+        // default settings for all sockets
+        IO.setDefaultOkHttpWebSocketFactory(okHttpClient);
+        IO.setDefaultOkHttpCallFactory(okHttpClient);
 
-    public void emitMessage(SessionDescription message) {
+        // set as an option
+        IO.Options opts = new IO.Options();
+        opts.callFactory = okHttpClient;
+        opts.webSocketFactory = okHttpClient;
+
         try {
-            Log.d("SignallingClient", "emitMessage() called with: message = [" + message + "]");
-            JSONObject obj = new JSONObject();
+            // set the socket.io url here
+            socket = IO.socket(apiEndpoint + "/" + room_name, opts);
+            socket.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        //room created event.
+        socket.on("created", args -> {
+            Log.d("SignallingClient.created", Arrays.toString(args));
+
+            callback.onCreatedRoom();
+        });
+
+        socket.on("disconnect", args -> {
+            Log.d("SignallingClient.disconnect", Arrays.toString(args));
+
+            callback.onDisconnect(args[0].toString());
+        });
+
+        //room is full event
+        socket.on("full", args -> {
+            Log.d("SignallingClient.full", Arrays.toString(args));
+        });
+
+        //peer joined event
+        socket.on("join", args -> {
+            Log.d("SignallingClient.join", Arrays.toString(args));
+
+            callback.onNewPeerJoined(args[0].toString());
+        });
+
+        //when you joined a chat room successfully
+        socket.on("joined", args -> {
+            Log.d("SignallingClient.joined", Arrays.toString(args));
+
+            callback.onJoinedRoom();
+        });
+
+        //log event
+        socket.on("log", args -> {
+            Log.d("SignallingClient.log", Arrays.toString(args));
+        });
+
+        //messages - SDP and ICE candidates are transferred through this
+        socket.on("message", args -> {
+            Log.d("SignallingClient.message", Arrays.toString(args));
+
+            String id = args[1].toString();
+
+            if (args[0] instanceof String) {
+                String data = (String) args[0];
+
+                Log.d("SignallingClient.String received:", data);
+
+                if (data.equalsIgnoreCase("bye")) {
+                    Log.d("SignallingClient", "Bye received");
+
+                    callback.onRemoteHangUp(id);
+                }
+            } else if (args[0] instanceof JSONObject) {
+                JSONObject data;
+                String type;
+
+                try {
+                    data = (JSONObject) args[0];
+
+                    Log.d("SignallingClient.Json Received:", data.toString());
+
+                    type = data.getString("type");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                if (type.equalsIgnoreCase("offer")) {
+                    callback.onOfferReceived(data, id);
+                    return;
+                }
+
+                if (type.equalsIgnoreCase("answer")) {
+                    callback.onAnswerReceived(data, id);
+                    return;
+                }
+
+                if (type.equalsIgnoreCase("candidate")) {
+                    callback.onIceCandidateReceived(data, id);
+                    return;
+                }
+            }
+        });
+    }
+
+    public void emitMessage(String message, String id) {
+        Log.d("SignallingClient.emitMessage", message);
+
+        socket.emit("message", message, id);
+    }
+
+    public void emitMessage(SessionDescription message, String id) {
+        JSONObject obj = new JSONObject();
+
+        try {
             obj.put("type", message.type.canonicalForm());
             obj.put("sdp", message.description);
-            Log.d("emitMessage", obj.toString());
-            socket.emit("message", obj);
-            Log.d("vivek1794", obj.toString());
         } catch (JSONException e) {
             e.printStackTrace();
+            return;
         }
+
+        Log.d("emitMessage", obj.toString());
+        socket.emit("message", obj, id);
     }
 
+    public void emitIceCandidate(IceCandidate iceCandidate, String id) {
+        JSONObject object = new JSONObject();
 
-    public void emitIceCandidate(IceCandidate iceCandidate) {
         try {
-            JSONObject object = new JSONObject();
             object.put("type", "candidate");
             object.put("label", iceCandidate.sdpMLineIndex);
             object.put("id", iceCandidate.sdpMid);
             object.put("candidate", iceCandidate.sdp);
-            socket.emit("message", object);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
+            return;
         }
 
+        socket.emit("message", object, id);
     }
 
     public void close() {
-        socket.emit("bye", roomName);
+        Log.d("SignallingClient", "close");
+
         socket.disconnect();
         socket.close();
+
         instance = null;
     }
 
 
     public interface SignalingInterface {
-        void onRemoteHangUp(String msg);
-
-        void onOfferReceived(JSONObject data);
-
-        void onAnswerReceived(JSONObject data);
-
-        void onIceCandidateReceived(JSONObject data);
-
-        void onTryToStart();
-
+        void onAnswerReceived(JSONObject data, String id);
         void onCreatedRoom();
-
+        void onDisconnect(String reason);
+        void onIceCandidateReceived(JSONObject data, String id);
         void onJoinedRoom();
-
-        void onNewPeerJoined();
+        void onNewPeerJoined(String id);
+        void onOfferReceived(JSONObject data, String id);
+        void onRemoteHangUp(String id);
     }
 }

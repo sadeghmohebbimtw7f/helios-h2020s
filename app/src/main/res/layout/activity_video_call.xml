@@ -5,32 +5,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/activity_video_call"
+        android:columnCount="2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         tools:context="eu.h2020.helios_social.modules.heliosMediastreaming.videocall.VideoCallActivity">
-
-
-        <org.webrtc.SurfaceViewRenderer
-            android:id="@+id/remote_gl_surface_view"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:layout_height="match_parent" />
 
         <org.webrtc.SurfaceViewRenderer
             android:id="@+id/local_gl_surface_view"
-            android:layout_width="match_parent"
-            android:layout_gravity="bottom|end"
-            android:layout_height="match_parent" />
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+        />
 
-
-
-    </FrameLayout>
+        <org.webrtc.SurfaceViewRenderer
+            android:id="@+id/remote_gl_surface_view0"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:visibility="gone"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+        />
+        <org.webrtc.SurfaceViewRenderer
+            android:id="@+id/remote_gl_surface_view1"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:visibility="gone"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+        />
+        <org.webrtc.SurfaceViewRenderer
+            android:id="@+id/remote_gl_surface_view2"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:visibility="gone"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+        />
+    </GridLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
