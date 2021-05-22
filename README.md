@@ -7,9 +7,9 @@ Repository for the Videocall of Media Streaming Module (T3.3).
 This part of the app creates a P2P video call between two users connected to
 the same signalling server. The default configuration is the following:
 
-* Signaling server: https://builder.helios-social.eu:1794
-* TURN server: turns://bulder.helios-social.eu:5349
-* STUN server: stun://builder.helios-social.eu:3478
+* Signaling server: https://builder.helios-social.eu:11794
+* TURN server: turn:77.231.202.138:3478
+* STUN server: stun:77.231.202.138:3478
 * Room Name: test_room
 
 All these values can be modified in the `values/strings.xml` file.
@@ -88,7 +88,7 @@ heliosPassword=password
 ```
 
 To request Nexus username and password, contact with:
-`carlosalberto.martinedo@atos.net`
+`jordi.hernandezv@atos.net`
 
 ### How to deploy a new version of the dependencies
 
@@ -112,7 +112,7 @@ to protect the `master` branch push and merge for the partner in charge of its
 module/project (maintainer).
 
 To request Jenkins username and password, contact with:
-`carlosalberto.martinedo@atos.net`
+`jordi.hernandezv@atos.net`
 
 ### How to use the dependencies
 
@@ -121,7 +121,7 @@ specify the last version available in Nexus, related to the last Jenkins's
 deploy. For example, to declare the dependency on the videocall module and the
 respective version:
 
-`implementation 'eu.h2020.helios_social.modules.videocall:videocall:1.0.33'`
+`implementation 'eu.h2020.helios_social.modules.videocall:videocall:1.0.36'`
 
 For more info review:
 `https://scm.atosresearch.eu/ari/helios_group/generic-issues/blob/master/multiprojectDependencies.md`
