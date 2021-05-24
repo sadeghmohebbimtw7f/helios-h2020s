@@ -4,11 +4,11 @@
     <!-- Video Call Strings -->
     <string name="end_call_button">Hangup</string>
 <!--    <string name="TURN_URL">turns:builder.helios-social.eu:5349</string>-->
-    <string name="TURN_URL">turn:77.231.202.138:3478</string>
-    <string name="TURN_user">helios</string>
-    <string name="TURN_credential">h3l10s</string>
-    <string name="STUN_URL">stun:77.231.202.138:3478</string>
-    <string name="API_endpoint">https://builder.helios-social.eu:11794</string>
+    <string name="TURN_URL">turn:77.231.202.135:3478</string>
+    <string name="TURN_user">user1</string>
+    <string name="TURN_credential">user1</string>
+    <string name="STUN_URL">stun:77.231.202.135:3478</string>
+    <string name="API_endpoint">https://77.231.202.135:11794</string>
     <string name="room_name">test_room</string>
 
 </resources>

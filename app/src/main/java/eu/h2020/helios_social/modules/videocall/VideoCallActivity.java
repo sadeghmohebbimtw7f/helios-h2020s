@@ -19,6 +19,7 @@
 package eu.h2020.helios_social.modules.videocall;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -103,15 +104,37 @@ implements View.OnClickListener, SignallingClient.SignalingInterface
     private static final String TAG = "VideoCallActivity";
 
     private String room_name = "";
+    private Intent intent;
+    private String TURN_URL = "";
+    private String TURN_user = "";
+    private String TURN_credential;
+    private String STUN_URL = "";
+    private String API_endpoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call);
 
-        room_name = getIntent().getStringExtra("room_name");
+        intent = getIntent();
 
+        room_name = getIntent().getStringExtra("room_name");
         if (room_name == null) room_name = getString(R.string.room_name);
+
+        TURN_URL = getIntent().getStringExtra("TURN_URL");
+        if (TURN_URL == null) TURN_URL = getString(R.string.TURN_URL);
+
+        TURN_user = getIntent().getStringExtra("TURN_user");
+        if (TURN_user == null) TURN_user = getString(R.string.TURN_user);
+
+        TURN_credential = getIntent().getStringExtra("TURN_credential");
+        if (TURN_credential == null) TURN_credential = getString(R.string.TURN_credential);
+
+        STUN_URL = getIntent().getStringExtra("STUN_URL");
+        if (STUN_URL == null) STUN_URL = getString(R.string.STUN_URL);
+
+        API_endpoint = getIntent().getStringExtra("API_endpoint");
+        if (API_endpoint == null) API_endpoint = getString(R.string.API_endpoint);
 
         // Check if the app has permissions to use the camera and microphone
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
@@ -183,6 +206,8 @@ implements View.OnClickListener, SignallingClient.SignalingInterface
         remoteVideoViewsPool.add(initRemoteVideoView(rootEglBase, R.id.remote_gl_surface_view0));
         remoteVideoViewsPool.add(initRemoteVideoView(rootEglBase, R.id.remote_gl_surface_view1));
         remoteVideoViewsPool.add(initRemoteVideoView(rootEglBase, R.id.remote_gl_surface_view2));
+        remoteVideoViewsPool.add(initRemoteVideoView(rootEglBase, R.id.remote_gl_surface_view3));
+        remoteVideoViewsPool.add(initRemoteVideoView(rootEglBase, R.id.remote_gl_surface_view4));
 
         // Prepares the hangup button
         hangup = findViewById(R.id.end_call);
@@ -192,8 +217,8 @@ implements View.OnClickListener, SignallingClient.SignalingInterface
         iceServers = Arrays.asList(new IceServer[]{
             new IceServer(getString(R.string.STUN_URL), null, null),
             new IceServer(getString(R.string.TURN_URL),
-                getString(R.string.TURN_user),
-                getString(R.string.TURN_credential)
+                    getString(R.string.TURN_user),
+                    getString(R.string.TURN_credential)
             )
         });
 
