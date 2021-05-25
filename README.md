@@ -7,9 +7,9 @@ Repository for the Videocall of Media Streaming Module (T3.3).
 This part of the app creates a P2P video call between two users connected to
 the same signalling server. The default configuration is the following:
 
-* Signaling server: https://builder.helios-social.eu:11794
-* TURN server: turn:77.231.202.138:3478
-* STUN server: stun:77.231.202.138:3478
+* Signaling server: https://77.231.202.135:11794
+* TURN server: turn:77.231.202.135:3478
+* STUN server: stun:77.231.202.135:3478
 * Room Name: test_room
 
 All these values can be modified in the `values/strings.xml` file.
