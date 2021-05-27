@@ -215,10 +215,10 @@ implements View.OnClickListener, SignallingClient.SignalingInterface
 
         // Initialize IceServers array composed of the STUN server and the TURN server
         iceServers = Arrays.asList(new IceServer[]{
-            new IceServer(getString(R.string.STUN_URL), null, null),
-            new IceServer(getString(R.string.TURN_URL),
-                    getString(R.string.TURN_user),
-                    getString(R.string.TURN_credential)
+            new IceServer(STUN_URL, null, null),
+            new IceServer(TURN_URL,
+                    TURN_user,
+                    TURN_credential
             )
         });
 
@@ -234,7 +234,7 @@ implements View.OnClickListener, SignallingClient.SignalingInterface
             peerIceServers.add(builder.createIceServer());
         }
 
-        SignallingClient.getInstance().init(this, getString(R.string.API_endpoint), room_name);
+        SignallingClient.getInstance().init(this, API_endpoint, room_name);
 
         //Initialize PeerConnectionFactory globals.
         PeerConnectionFactory.InitializationOptions initializationOptions =
