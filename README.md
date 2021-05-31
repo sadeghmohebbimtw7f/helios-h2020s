@@ -125,3 +125,9 @@ respective version:
 
 For more info review:
 `https://scm.atosresearch.eu/ari/helios_group/generic-issues/blob/master/multiprojectDependencies.md`
+
+### VideoCall module storage
+
+The module implements a local storage system to communicate clients through the Signaling and Turn/Stun servers. These servers are packaged in Docker containers.
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/videocall_storage.png" alt="VideoCall local storage implementation">
