@@ -28,6 +28,20 @@ By default, if the parameters are not provided, the next configuration is used:
 
 All these values can be modified in the `values/strings.xml` file.
 
+This module can be tested using, e.g the MediaStreaming App through the VideoCall Option.
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/mediastreaming_app.png" alt="MediaStreaming App">
+
+Once selected the option, we can introduce the room name
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/mediastreaming_room.png" alt="VideoCall Room Name">
+
+and the rest of the parameters using the Setting option.
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/mediastreaming_app.png" alt="VideoCall Settings">
+
+After of this, we can Start the Call.
+
 ### How to use Video Call
 
 It must be expecified the room name.
