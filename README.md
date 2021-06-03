@@ -4,11 +4,25 @@ Repository for the Videocall of Media Streaming Module (T3.3).
 
 ## Video Call
 
-This part of the app creates a P2P video call between two users connected to
-the same signalling server. The default configuration is the following:
+This part of the app creates a P2P video call between two users connected to the same signalling server. 
+If the clients are communicating using different networks, this communication could be blocked, not offering well the video. 
+To avoid tihs we use a Turn server.  
+
+This module accept the next parameters:
+
+- Room name
+- Signaling server
+- Turn Server
+- Turn User
+- Turn Credential
+- Stun Server
+
+By default, if the parameters are not provided, the next configuration is used:
 
 * Signaling server: https://77.231.202.135:11794
 * TURN server: turn:77.231.202.135:3478
+* TURN user: User1
+* TURN credential: (See value in values/string.xml)
 * STUN server: stun:77.231.202.135:3478
 * Room Name: test_room
 
