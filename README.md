@@ -38,7 +38,7 @@ Once selected the option, we can introduce the room name
 
 and the rest of the parameters using the Setting option.
 
-<img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/mediastreaming_app.png" alt="VideoCall Settings">
+<img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/mediastreaming_settings.png" alt="VideoCall Settings">
 
 After of this, we can Start the Call.
 
