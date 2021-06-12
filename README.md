@@ -44,11 +44,16 @@ After of this, we can Start the Call.
 
 ### How to use Video Call
 
-It must be expecified the room name.
+To call the extension from your application, include in your activity the room_name, signaling_url, turn_url, turn_user, turn_credential and stun_url parameters.
 
 ```java
     Intent videoCallIntent = new Intent(MainActivity.this, VideoCallActivity.class);
     videoCallIntent.putExtra("room_name", "test_room");
+	videoCallIntent.putExtra("TURN_URL", TURN_URL);
+    videoCallIntent.putExtra("TURN_user", TURN_user);
+    videoCallIntent.putExtra("TURN_credential", TURN_credential);
+    videoCallIntent.putExtra("STUN_URL", STUN_URL);
+    videoCallIntent.putExtra("API_endpoint", API_endpoint);
     MainActivity.this.startActivity(videoCallIntent);
 ```
 
