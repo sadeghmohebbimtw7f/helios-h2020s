@@ -48,13 +48,13 @@ To call the extension from your application, include in your activity the room_n
 
 ```java
     Intent videoCallIntent = new Intent(MainActivity.this, VideoCallActivity.class);
-    videoCallIntent.putExtra("room_name", "test_room");
+	videoCallIntent.putExtra("room_name", "test_room");	
 	videoCallIntent.putExtra("TURN_URL", TURN_URL);
-    videoCallIntent.putExtra("TURN_user", TURN_user);
-    videoCallIntent.putExtra("TURN_credential", TURN_credential);
-    videoCallIntent.putExtra("STUN_URL", STUN_URL);
-    videoCallIntent.putExtra("API_endpoint", API_endpoint);
-    MainActivity.this.startActivity(videoCallIntent);
+	videoCallIntent.putExtra("TURN_user", TURN_user);
+	videoCallIntent.putExtra("TURN_credential", TURN_credential);
+	videoCallIntent.putExtra("STUN_URL", STUN_URL);
+	videoCallIntent.putExtra("API_endpoint", API_endpoint);
+	MainActivity.this.startActivity(videoCallIntent);
 ```
 
 ### Request permissions
