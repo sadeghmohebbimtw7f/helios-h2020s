@@ -44,6 +44,8 @@ After of this, we can Start the Call.
 
 ### How to use Video Call
 
+This module generates a .aar file to be included in your applications as a dependency. See more details at Multiproject dependencies chapter.  
+
 To call the extension from your application, include in your activity the room_name, signaling_url, turn_url, turn_user, turn_credential and stun_url parameters.
 
 ```java
@@ -67,6 +69,22 @@ Before start activity of the video call intent:
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, ALL_PERMISSIONS_CODE);
     }
 ```
+
+### How to develope
+
+- Install Git in your computer: https://github.com/git-guides/install-git
+
+- Choose a directory from your computer and download with Git the code using the link provided in this page:
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/github.PNG" alt="Download VideoCall code">
+
+`git clone https://github.com/helios-h2020/h.extension-MediaStreaming-VideoCall.git`
+
+- Open Android Studio and open an existing project from the directory of your code downloadedTo install Android Studio follow the next link: https://developer.android.com/studio/install)
+
+- To generate an aar file from the code, select the Build option in the Menu Bar, select ReBuild project or choose Make Project icon as you can see in the picture. Once generated, you can find the file in app/build/options/aar (you can rename the file as you like):
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/build.PNG" alt="Build aar file">
 
 ## Multiproject dependencies
 
@@ -162,5 +180,7 @@ For more info review:
 ### VideoCall module storage
 
 The module implements a local storage system to communicate clients through the Signaling and Turn/Stun servers. These servers are packaged in Docker containers.
+
+See more info at: https://github.com/helios-h2020/h.core-PersonalStorageElements
 
 <img src="https://raw.githubusercontent.com/helios-h2020/h.extension-MediaStreaming-VideoCall/master/doc/videocall_storage.png" alt="VideoCall local storage implementation">
