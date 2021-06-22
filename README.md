@@ -80,7 +80,7 @@ Before start activity of the video call intent:
 
 `git clone https://github.com/helios-h2020/h.extension-MediaStreaming-VideoCall.git`
 
-- Open Android Studio and open an existing project from the directory of your code downloadedTo install Android Studio follow the next link: https://developer.android.com/studio/install)
+- Open Android Studio and open an existing project from the directory of your code downloaded. To install Android Studio follow the next link: https://developer.android.com/studio/install)
 
 - To generate an aar file from the code, select the Build option in the Menu Bar, select ReBuild project or choose Make Project icon as you can see in the picture. Once generated, you can find the file in app/build/options/aar (you can rename the file as you like):
 
