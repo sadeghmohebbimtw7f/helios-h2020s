@@ -177,6 +177,39 @@ respective version:
 For more info review:
 `https://scm.atosresearch.eu/ari/helios_group/generic-issues/blob/master/multiprojectDependencies.md`
 
+### Hot to use the dependencies locally
+
+If you want to include the .aar file generated as a dependency in the application whitout use Nexus dependencies:
+
+- Create libs folder inside app folder:
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.app-MediaStreaming/master/doc/libs.PNG" alt="libs folder">
+
+- Open build.gradle at Project level and add flatDir{dirs 'libs'} :
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.app-MediaStreaming/master/doc/libs_gradle.PNG" alt="Project build.gradle">
+
+```
+allprojects {
+   repositories {
+      jcenter()
+      flatDir {
+        dirs 'libs'
+      }
+   }
+}
+```
+
+- Open build.gradle at app level and add .aar file:
+
+<img src="https://raw.githubusercontent.com/helios-h2020/h.app-MediaStreaming/master/doc/gradle_app.PNG" alt="app build.gradle">
+
+```
+dependencies {
+     compile(name:'file_name', ext:'aar')
+}
+```
+
 ### VideoCall module storage
 
 The module implements a local storage system to communicate clients through the Signaling and Turn/Stun servers. These servers are packaged in Docker containers.
