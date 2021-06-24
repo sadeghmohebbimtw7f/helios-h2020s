@@ -181,7 +181,7 @@ For more info review:
 
 If you want to include the .aar file generated as a dependency in the application whitout use Nexus dependencies:
 
-- Create libs folder inside app folder:
+- Go to your application code and create libs folder inside app folder:
 
 <img src="https://raw.githubusercontent.com/helios-h2020/h.app-MediaStreaming/master/doc/libs.PNG" alt="libs folder">
 
