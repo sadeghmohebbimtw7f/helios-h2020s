@@ -21,7 +21,7 @@ By default, if the parameters are not provided, the next configuration is used:
 
 * Signaling server: https://77.231.202.135:11794
 * TURN server: turn:77.231.202.135:3478
-* TURN user: User1
+* TURN user: user1
 * TURN credential: (See value in values/string.xml)
 * STUN server: stun:77.231.202.135:3478
 * Room Name: test_room
